@@ -1,5 +1,6 @@
 #include "serialport.h"
 
+
 SerialPort::SerialPort()
 {
     setPortName(portPath);
@@ -49,7 +50,6 @@ void SerialPort::createLists()
 
 void SerialPort::sendMessage1602(QByteArray text)
 {
-    text = text.prepend(message1602);
     text = text.append(terminator1602);
     this->write(text);
 }
@@ -62,11 +62,13 @@ void SerialPort::sendCommand1602(const char commandChar)
     this->write(this->command);
 }
 
-void SerialPort::sendSettings1602(const char selection)
+void SerialPort::sendSettings1602(const char selection1, const char selection2, const char selection3)
 {
+    this->sendCommand1602(options1602);
     this->command.clear();
-    this->command.append(options1602);
-    this->command.append(selection);
+    this->command.append(selection1);
+    this->command.append(selection2);
+    this->command.append(selection3);
     this->command.append(terminator1602);
     this->write(this->command);
 }
