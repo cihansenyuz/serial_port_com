@@ -7,8 +7,6 @@
 #include <string>
 #include <QChar>
 #include <QButtonGroup>
-#include <QThread>
-
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -43,8 +41,6 @@ void MainWindow::on_send_button_clicked()
     temp = ui->message_line->text();
     QByteArray convertedTemp;
     convertedTemp = temp.toLocal8Bit().constData();
-    serial->sendCommand1602(message1602);
-    serial->waitForReadyRead(50);
     serial->sendMessage1602(convertedTemp);
     ui->message_line->clear();
 }
@@ -236,9 +232,40 @@ void MainWindow::on_moveCursorButton_clicked()
 
 void MainWindow::apply1602Settings(void)
 {
-    serial->sendSettings1602(ui->displayOnOffButton->isChecked(),
-                             ui->cursorOnButton->isChecked(),
-                             ui->blinkCursorButton->isChecked());
+    if(ui->displayOnOffButton->isChecked())
+    {
+        if(ui->cursorOnButton->isChecked())
+        {
+            if(ui->blinkCursorButton->isChecked())
+                serial->sendSettings1602('7');
+            else
+                serial->sendSettings1602('6');
+        }
+        else
+        {
+            if(ui->blinkCursorButton->isChecked())
+                serial->sendSettings1602('5');
+             else
+                serial->sendSettings1602('4');
+        }
+    }
+    else
+    {
+        if(ui->cursorOnButton->isChecked())
+        {
+            if(ui->blinkCursorButton->isChecked())
+                serial->sendSettings1602('3');
+            else
+                serial->sendSettings1602('2');
+        }
+        else
+        {
+            if(ui->blinkCursorButton->isChecked())
+                serial->sendSettings1602('1');
+             else
+                serial->sendSettings1602('0');
+        }
+    }
 }
 
 void MainWindow::on_displayOnOffButton_clicked()
