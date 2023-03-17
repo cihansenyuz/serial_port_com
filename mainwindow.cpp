@@ -47,8 +47,7 @@ void MainWindow::on_send_button_clicked()
 
 void MainWindow::readData()
 {
-    serial->waitForReadyRead(50);
-    ui->chat_box->appendPlainText(serial->readAll());
+    ui->chat_box->insertPlainText(serial->readAll());
 }
 
 void MainWindow::on_comPortButton_clicked()
@@ -232,40 +231,22 @@ void MainWindow::on_moveCursorButton_clicked()
 
 void MainWindow::apply1602Settings(void)
 {
+    serial->command.clear();
+    serial->command.append(options1602);
     if(ui->displayOnOffButton->isChecked())
-    {
-        if(ui->cursorOnButton->isChecked())
-        {
-            if(ui->blinkCursorButton->isChecked())
-                serial->sendSettings1602('7');
-            else
-                serial->sendSettings1602('6');
-        }
-        else
-        {
-            if(ui->blinkCursorButton->isChecked())
-                serial->sendSettings1602('5');
-             else
-                serial->sendSettings1602('4');
-        }
-    }
+        serial->command.append('1');
     else
-    {
-        if(ui->cursorOnButton->isChecked())
-        {
-            if(ui->blinkCursorButton->isChecked())
-                serial->sendSettings1602('3');
-            else
-                serial->sendSettings1602('2');
-        }
-        else
-        {
-            if(ui->blinkCursorButton->isChecked())
-                serial->sendSettings1602('1');
-             else
-                serial->sendSettings1602('0');
-        }
-    }
+        serial->command.append('0');
+    if(ui->cursorOnButton->isChecked())
+        serial->command.append('1');
+    else
+        serial->command.append('0');
+    if(ui->blinkCursorButton->isChecked())
+        serial->command.append('1');
+    else
+        serial->command.append('0');
+    serial->command.append(terminator1602);
+    serial->write(serial->command);
 }
 
 void MainWindow::on_displayOnOffButton_clicked()
