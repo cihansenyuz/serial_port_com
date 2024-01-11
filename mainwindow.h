@@ -16,6 +16,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void getComPorts();
+    void apply1602Settings(void);
 
 private slots:
     void on_send_button_clicked();
@@ -28,6 +29,12 @@ private slots:
     void on_stopBitBox_currentIndexChanged(int index);
     void on_parityBox_currentIndexChanged(int index);
     void on_flowControlBox_currentIndexChanged(int index);
+    void on_clearButton_clicked();
+    void on_secondLineButton_clicked();
+    void on_moveCursorButton_clicked();
+    void on_displayOnOffButton_clicked();
+    void on_cursorOnButton_clicked();
+    void on_blinkCursorButton_clicked();
 
 private:
     QList<QSerialPortInfo> list;

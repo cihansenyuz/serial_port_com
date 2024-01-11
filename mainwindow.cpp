@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <iostream>
 #include <string>
+#include <QChar>
+#include <QButtonGroup>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,6 +15,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("Serial Port Com");
     getComPorts();
+
+    QButtonGroup settingsGroup1,settingsGroup2,settingsGroup3;
+    /*settingsGroup1 = new QButtonGroup;
+    settingsGroup2 = new QButtonGroup;
+    settingsGroup3 = new QButtonGroup;*/
+
+    settingsGroup1.addButton(ui->displayOnOffButton);
+    settingsGroup2.addButton(ui->cursorOnButton);
+    settingsGroup3.addButton(ui->blinkCursorButton);
+
     serial = new SerialPort;
     connect(serial,SIGNAL(readyRead()),this,SLOT(readData()));
     setDefaultSerialParameters();
@@ -25,13 +37,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_send_button_clicked()
 {
-    ui->chat_box->appendPlainText(ui->message_line->text());
+    QString temp;
+    temp = ui->message_line->text();
+    QByteArray convertedTemp;
+    convertedTemp = temp.toLocal8Bit().constData();
+    serial->sendMessage1602(convertedTemp);
     ui->message_line->clear();
 }
 
 void MainWindow::readData()
 {
-    ui->chat_box->appendPlainText(serial->readAll());
+    ui->chat_box->insertPlainText(serial->readAll());
 }
 
 void MainWindow::on_comPortButton_clicked()
@@ -197,3 +213,54 @@ void MainWindow::setDefaultSerialParameters()
     ui->parityBox->setCurrentIndex(0);
     ui->flowControlBox->setCurrentIndex(0);
 }
+
+void MainWindow::on_clearButton_clicked()
+{
+    serial->sendCommand1602(clear1602);
+}
+
+void MainWindow::on_secondLineButton_clicked()
+{
+    serial->sendCommand1602(secondLine1602);
+}
+
+void MainWindow::on_moveCursorButton_clicked()
+{
+    serial->sendCommand1602(moveCursor1602);
+}
+
+void MainWindow::apply1602Settings(void)
+{
+    serial->command.clear();
+    serial->command.append(options1602);
+    if(ui->displayOnOffButton->isChecked())
+        serial->command.append('1');
+    else
+        serial->command.append('0');
+    if(ui->cursorOnButton->isChecked())
+        serial->command.append('1');
+    else
+        serial->command.append('0');
+    if(ui->blinkCursorButton->isChecked())
+        serial->command.append('1');
+    else
+        serial->command.append('0');
+    serial->command.append(terminator1602);
+    serial->write(serial->command);
+}
+
+void MainWindow::on_displayOnOffButton_clicked()
+{
+    MainWindow::apply1602Settings();
+}
+
+void MainWindow::on_cursorOnButton_clicked()
+{
+    MainWindow::apply1602Settings();
+}
+
+void MainWindow::on_blinkCursorButton_clicked()
+{
+    MainWindow::apply1602Settings();
+}
+
