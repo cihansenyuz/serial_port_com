@@ -23,18 +23,18 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_send_button_clicked()
+void MainWindow::on_sendButton_clicked()
 {
-    ui->chat_box->appendPlainText(ui->message_line->text());
-    ui->message_line->clear();
+    ui->serialMessages->appendPlainText(ui->messageLine->text());
+    ui->messageLine->clear();
 }
 
 void MainWindow::readData()
 {
-    ui->chat_box->appendPlainText(serial->readAll());
+    ui->serialMessages->appendPlainText(serial->readAll());
 }
 
-void MainWindow::on_comPortButton_clicked()
+void MainWindow::on_refreshComsButton_clicked()
 {
     getComPorts();
 }
@@ -45,8 +45,10 @@ void MainWindow::getComPorts()
     list = QSerialPortInfo::availablePorts();
 
     if(list.isEmpty())
-        ui->comPortBox->addItem("No Port Detected");
-
+    {
+        ui->comPortBox->setCurrentIndex(-1);
+        ui->infoMessages->appendPlainText("Error: No available com port found!");
+    }
     QList<QString> portList;
 
     for(int i=0; i<list.length(); i++)
@@ -54,6 +56,7 @@ void MainWindow::getComPorts()
         portList.push_back(list[i].portName());
     }
     ui->comPortBox->addItems(portList);
+    ui->infoMessages->appendPlainText("Info: Available com port list updated.");
 }
 
 void MainWindow::on_connectButton_clicked()
@@ -70,13 +73,13 @@ void MainWindow::on_connectButton_clicked()
     if(index != -1)
         serial->setPort(list[index]);
     else
-        ui->chat_box->appendPlainText("Error: Selected port cannot be found! Please refresh port list");
+        ui->infoMessages->appendPlainText("Error: Selected port cannot be found! Please refresh port list");
 
     int portOpen = serial->open(QIODeviceBase::ReadWrite);
     if(portOpen)
-        ui->chat_box->appendPlainText("Selected port is now open");
+        ui->infoMessages->appendPlainText("Info: Selected port is now open");
     else
-        ui->chat_box->appendPlainText("Error: cannot open selected port");
+        ui->infoMessages->appendPlainText("Error: cannot open selected port");
 }
 
 void MainWindow::on_baudRateBox_currentIndexChanged(int index)
@@ -197,3 +200,10 @@ void MainWindow::setDefaultSerialParameters()
     ui->parityBox->setCurrentIndex(0);
     ui->flowControlBox->setCurrentIndex(0);
 }
+
+void MainWindow::on_disconnectButton_clicked()
+{}
+void MainWindow::on_clearMessagePanelButton_clicked()
+{}
+void MainWindow::on_clearInfoPanelButton_clicked()
+{}

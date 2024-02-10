@@ -18,10 +18,13 @@ public:
     void getComPorts();
 
 private slots:
-    void on_send_button_clicked();
+    void on_sendButton_clicked();
     void readData();
-    void on_comPortButton_clicked();
     void on_connectButton_clicked();
+    void on_refreshComsButton_clicked();
+    void on_disconnectButton_clicked();         // to be implemented
+    void on_clearMessagePanelButton_clicked();  // to be implemented
+    void on_clearInfoPanelButton_clicked();     // to be implemented
     void setDefaultSerialParameters(void);
     void on_baudRateBox_currentIndexChanged(int index);
     void on_dataBitBox_currentIndexChanged(int index);
