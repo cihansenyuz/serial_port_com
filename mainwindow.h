@@ -23,14 +23,15 @@ private slots:
     void on_connectButton_clicked();
     void on_refreshComsButton_clicked();
     void on_disconnectButton_clicked();         // to be implemented
-    void on_clearMessagePanelButton_clicked();  // to be implemented
-    void on_clearInfoPanelButton_clicked();     // to be implemented
+    void on_clearMessagePanelButton_clicked();
+    void on_clearInfoPanelButton_clicked();
     void setDefaultSerialParameters(void);
     void on_baudRateBox_currentIndexChanged(int index);
     void on_dataBitBox_currentIndexChanged(int index);
     void on_stopBitBox_currentIndexChanged(int index);
     void on_parityBox_currentIndexChanged(int index);
     void on_flowControlBox_currentIndexChanged(int index);
+    void on_errorOccurred(QSerialPort::SerialPortError error);
 
 private:
     QList<QSerialPortInfo> list;
