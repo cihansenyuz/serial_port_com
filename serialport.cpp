@@ -6,16 +6,37 @@ SerialPort::SerialPort()
     createLists();
 }
 
+/* 
+* @brief Method to get port path for serial
+*
+*
+* @param none
+* @return none
+*/
 const QString &SerialPort::getPortPath() const
 {
     return portPath;
 }
 
+/* 
+* @brief Method to set port path for serial
+*
+*
+* @param none
+* @return none
+*/
 void SerialPort::setPortPath(const QString &newPortPath)
 {
     portPath = newPortPath;
 }
 
+/* 
+* @brief Method to create serial port parameters lists
+*
+*
+* @param none
+* @return none
+*/
 void SerialPort::createLists()
 {
     baudRateList.append("1200");

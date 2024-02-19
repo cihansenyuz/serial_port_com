@@ -1,3 +1,15 @@
+/**
+  ******************************************************************************
+  * @file    serialport.h
+  * @author  Cihan Senyuz
+  * @brief   Header for serialport.cpp file.
+  *                 This file contains the common defines of the application.
+  * 
+  * 
+  ******************************************************************************
+  */
+
+
 #ifndef SERIALPORT_H
 #define SERIALPORT_H
 
